@@ -1,0 +1,27 @@
+{
+	"name": "tojs-webring",
+	"version": "1.0.0",
+	"description": "Toronto JS Webring",
+	"main": "src/index.ts",
+	"scripts": {
+		"generate:types": "wrangler types ./src/env.d.ts",
+		"generate:certs": "mkdir certs && mkcert -key-file='./certs/server.key' -cert-file='./certs/server.crt' 'localhost'",
+		"start": "wrangler dev --env=local --https-cert-path certs/server.crt --https-key-path certs/server.key",
+		"build": "node --experimental-strip-types ./build/index.ts",
+		"deploy": "wrangler deploy --minify --env=\"\"",
+		"format": "dprint fmt --staged",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"webring"
+	],
+	"author": "",
+	"license": "MIT",
+	"packageManager": "pnpm@10.30.1",
+	"devDependencies": {
+		"@types/node": "^24.10.13",
+		"dprint": "^0.51.1",
+		"typescript": "^5.9.3",
+		"wrangler": "^4.69.0"
+	}
+}

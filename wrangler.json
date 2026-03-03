@@ -1,0 +1,47 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "tojs-webring",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-03-03",
+	"compatibility_flags": ["nodejs_compat"],
+	"keep_vars": false,
+	"send_metrics": false,
+	"preserve_file_names": true,
+	"minify": true,
+	"workers_dev": false,
+	"preview_urls": false,
+	"dev": {
+		"ip": "localhost",
+		"port": 6666,
+		"local_protocol": "https",
+		"upstream_protocol": "https"
+	},
+	"assets": {
+		"directory": "./public",
+		"binding": "Assets",
+		"run_worker_first": [
+			"/next",
+			"/prev",
+			"/random"
+		],
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	"vars": { "NODE_ENV": "production" },
+	"env": {
+		"local": {
+			"assets": {
+				"directory": "./public",
+				"binding": "Assets",
+				"run_worker_first": [
+					"/next",
+					"/prev",
+					"/random"
+				],
+				"html_handling": "auto-trailing-slash",
+				"not_found_handling": "404-page"
+			},
+			"vars": { "NODE_ENV": "local" }
+		}
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"required": ["$schema", "members"],
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "The JSON schema for this document.",
+			"const": "./members.schema.json"
+		},
+		"members": {
+			"type": "array",
+			"description": "The list of members on this webring",
+			"uniqueItems": true,
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"description": "A member for the webring",
+				"required": ["url", "title"],
+				"properties": {
+					"url": {
+						"type": "string",
+						"format": "uri",
+						"description": "The url for your website. HTTP and Gopher protocols accepted.\n**Note**: The host part will be used for matching on the server, but the full URL will be used for redirecting to your webiste."
+					},
+					"title": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The title that will be displayed for your webiste on the webrign list."
+					}
+				}
+			}
+		}
+	}
+}
