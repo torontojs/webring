@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Static web component sample</title>
+	</head>
+	<body>
+		<tojs-webring>
+			<!-- The styles here are only removing the list bullets, making the list a flex container and centering the text. -->
+			<style>
+				@scope {
+					header { text-align: center; }
+					ul {
+						display: flex;
+						flex-wrap: wrap;
+						list-style: none;
+						padding: 0;
+						gap: 1em;
+						justify-content: center;
+					}
+				}
+			</style>
+			<!-- The article element creates a section on the page and the "aria-labelledby" attribute adds an accesible name to it. -->
+			<!-- Note: all links have the "referrerpolicy" and "rel" attributes set to allow the origin to be sent in a privacy preserving way. -->
+			<article id="tojs-webring" aria-labelledby="tojs-webring-header">
+				<header>
+					<a
+						href="/"
+						referrerpolicy="strict-origin"
+						rel="external noopener"
+						id="tojs-webring-header"
+					>Toronto JS Webring</a>
+				</header>
+
+				<!-- The links are part of a list as this is a list of links. -->
+				<!-- The spans with the "aria-hidden" attribute hide the characters from screen readers. -->
+				<ul>
+					<li>
+						<a
+							href="/prev"
+							referrerpolicy="strict-origin"
+							rel="external noopener"
+						>
+							<span aria-hidden="true">&#x23ea;&#xfe0e;</span>
+							<span>Previous Website</span>
+						</a>
+					</li>
+					<li>
+						<a
+							href="/random"
+							referrerpolicy="strict-origin"
+							rel="external noopener"
+						>
+							<span>Random Website</span>
+						</a>
+					</li>
+					<li>
+						<a
+							href="/next"
+							referrerpolicy="strict-origin"
+							rel="external noopener"
+						>
+							<span>Next Website</span>
+							<span aria-hidden="true">&#x23e9;&#xfe0e;</span>
+						</a>
+					</li>
+				</ul>
+			</article>
+		</tojs-webring>
+	</body>
+</html>

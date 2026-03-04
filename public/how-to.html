@@ -4,17 +4,180 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Webring How To</title>
+		<style>
+			:root {
+				font-family: system-ui;
+				tab-size: 4;
+			}
+
+			iframe { inline-size: 100%; }
+			h1 { text-align: center; }
+
+			main {
+				max-inline-size: 120ch;
+				margin-inline: auto;
+			}
+
+			pre code {
+				--line-counter-margin-right: 1ch;
+				--line-counter-width: 4ch;
+
+				counter-reset: step;
+				counter-increment: step 0;
+				word-break: break-word;
+				overflow-wrap: break-word;
+				white-space: pre-wrap;
+				margin: 1rem;
+				display: flex;
+				flex-direction: column;
+
+				.line {
+					box-sizing: border-box;
+					display: inline-block;
+					padding-inline-start: calc(var(--line-counter-width) + var(--line-counter-margin-right));
+					inline-size: 100%;
+					counter-increment: step;
+
+					&::before {
+						display: inline-block;
+						margin-inline-end: var(--line-counter-margin-right);
+						margin-inline-start: calc((var(--line-counter-width) + var(--line-counter-margin-right)) * -1);
+						inline-size: var(--line-counter-width);
+						content: counter(step, decimal-leading-zero);
+						color: var(--surface-3);
+						text-align: right;
+					}
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<h1>Webring "How To" Guide</h1>
+		<main>
+			<p>To join the webring, you need to follow two steps:</p>
+			<ol>
+				<li><a href="#add-links">Add links to the webring on your website</a></li>
+				<li><a href="#create-pr">Create a PR adding a link to your website to the members list</a></li>
+			</ol>
 
-		<p>To join the webring, you need to follow two steps:</p>
-		<ol>
-			<li><a href="#add-links">Add links to the webring on your website</a></li>
-			<li><a href="#create-pr">Create a PR adding a link to your website to the members list</a></li>
-		</ol>
+			<h2 id="add-links">Add links to your website</h2>
+			<p>To add your webiste to the webring, you simply need to add some links pointing to the webring.</p>
+			<p>We provide a sample code, but feel free to implement it yourself, if you like.</p>
+			<p>We only ask you to include it in an accessible place on your webiste that is not hidden away.</p>
 
-		<h2 id="add-links">Add links to your website</h2>
-		<h2 id="create-pr">Create a PR</h2>
+			<p><strong>Important</strong>: We use the <code>Referer</code> HTTP header to figure out the previous and next page.</p>
+			<p>
+				To allow us to redirect correctly to the previous or next pages, we ask that you set the <code>referrerpolicy</code> attribute on the links to either <code
+				>strict-origin</code> or <code>strict-origin-when-cross-origin</code>.
+			</p>
+
+			<h3>Sample code</h3>
+			<p>Here is a sample code for a react component for the webring:</p>
+
+			<!-- #region Code sample -->
+			<pre
+				class="shiki github-light-high-contrast"
+				style="background-color: #ffffff; color: #0e1116"
+				tabindex="0"
+			><code><span class="line"><span style="color:#0E1116">&lt;</span><span style="color:#024C1A">tojs-webring</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#66707B">	&lt;!-- The styles here are only removing the list bullets, making the list a flex container and centering the text. --&gt;</span></span>
+<span class="line"><span style="color:#0E1116">	&lt;</span><span style="color:#024C1A">style</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#A0111F">		@scope</span><span style="color:#0E1116"> {</span></span>
+<span class="line"><span style="color:#024C1A">			header</span><span style="color:#0E1116"> { </span><span style="color:#023B95">text-align</span><span style="color:#0E1116">: </span><span style="color:#023B95">center</span><span style="color:#0E1116">; }</span></span>
+<span class="line"><span style="color:#024C1A">			ul</span><span style="color:#0E1116"> {</span></span>
+<span class="line"><span style="color:#023B95">				display</span><span style="color:#0E1116">: </span><span style="color:#023B95">flex</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#023B95">				flex-wrap</span><span style="color:#0E1116">: </span><span style="color:#023B95">wrap</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#023B95">				list-style</span><span style="color:#0E1116">: </span><span style="color:#023B95">none</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#023B95">				padding</span><span style="color:#0E1116">: </span><span style="color:#023B95">0</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#023B95">				gap</span><span style="color:#0E1116">: </span><span style="color:#023B95">1</span><span style="color:#A0111F">em</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#023B95">				justify-content</span><span style="color:#0E1116">: </span><span style="color:#023B95">center</span><span style="color:#0E1116">;</span></span>
+<span class="line"><span style="color:#0E1116">			}</span></span>
+<span class="line"><span style="color:#0E1116">		}</span></span>
+<span class="line"><span style="color:#0E1116">	&lt;/</span><span style="color:#024C1A">style</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#66707B">	&lt;!-- The article element creates a section on the page and the "aria-labelledby" attribute adds an accesible name to it. --&gt;</span></span>
+<span class="line"><span style="color:#66707B">	&lt;!-- Note: all links have the "referrerpolicy" and "rel" attributes set to allow the origin to be sent in a privacy preserving way. --&gt;</span></span>
+<span class="line"><span style="color:#0E1116">	&lt;</span><span style="color:#024C1A">article</span><span style="color:#023B95"> id</span><span style="color:#0E1116">=</span><span style="color:#032563">"tojs-webring"</span><span style="color:#023B95"> aria-labelledby</span><span style="color:#0E1116">=</span><span style="color:#032563">"tojs-webring-header"</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">		&lt;</span><span style="color:#024C1A">header</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;</span><span style="color:#024C1A">a</span></span>
+<span class="line"><span style="color:#023B95">				href</span><span style="color:#0E1116">=</span><span style="color:#032563">"https://webring.torontojs.com/"</span></span>
+<span class="line"><span style="color:#023B95">				referrerpolicy</span><span style="color:#0E1116">=</span><span style="color:#032563">"strict-origin"</span></span>
+<span class="line"><span style="color:#023B95">				rel</span><span style="color:#0E1116">=</span><span style="color:#032563">"external noopener"</span></span>
+<span class="line"><span style="color:#023B95">				id</span><span style="color:#0E1116">=</span><span style="color:#032563">"tojs-webring-header"</span></span>
+<span class="line"><span style="color:#0E1116">			&gt;Toronto JS Webring&lt;/</span><span style="color:#024C1A">a</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">		&lt;/</span><span style="color:#024C1A">header</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#66707B">		&lt;!-- The links are part of a list as this is a list of links. --&gt;</span></span>
+<span class="line"><span style="color:#66707B">		&lt;!-- The spans with the "aria-hidden" attribute hide the characters from screen readers. --&gt;</span></span>
+<span class="line"><span style="color:#0E1116">		&lt;</span><span style="color:#024C1A">ul</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;</span><span style="color:#024C1A">a</span></span>
+<span class="line"><span style="color:#023B95">					href</span><span style="color:#0E1116">=</span><span style="color:#032563">"https://webring.torontojs.com/prev"</span></span>
+<span class="line"><span style="color:#023B95">					referrerpolicy</span><span style="color:#0E1116">=</span><span style="color:#032563">"strict-origin"</span></span>
+<span class="line"><span style="color:#023B95">					rel</span><span style="color:#0E1116">=</span><span style="color:#032563">"external noopener"</span></span>
+<span class="line"><span style="color:#0E1116">				&gt;</span></span>
+<span class="line"><span style="color:#0E1116">					&lt;</span><span style="color:#024C1A">span</span><span style="color:#023B95"> aria-hidden</span><span style="color:#0E1116">=</span><span style="color:#032563">"true"</span><span style="color:#0E1116">&gt;</span><span style="color:#A0111F">&amp;#x23ea;&amp;#xfe0e;</span><span style="color:#0E1116">&lt;/</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">					&lt;</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;Previous Website&lt;/</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;/</span><span style="color:#024C1A">a</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;/</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;</span><span style="color:#024C1A">a</span></span>
+<span class="line"><span style="color:#023B95">					href</span><span style="color:#0E1116">=</span><span style="color:#032563">"https://webring.torontojs.com/random"</span></span>
+<span class="line"><span style="color:#023B95">					referrerpolicy</span><span style="color:#0E1116">=</span><span style="color:#032563">"strict-origin"</span></span>
+<span class="line"><span style="color:#023B95">					rel</span><span style="color:#0E1116">=</span><span style="color:#032563">"external noopener"</span></span>
+<span class="line"><span style="color:#0E1116">				&gt;</span></span>
+<span class="line"><span style="color:#0E1116">					&lt;</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;Random Website&lt;/</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;/</span><span style="color:#024C1A">a</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;/</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;</span><span style="color:#024C1A">a</span></span>
+<span class="line"><span style="color:#023B95">					href</span><span style="color:#0E1116">=</span><span style="color:#032563">"https://webring.torontojs.com/next"</span></span>
+<span class="line"><span style="color:#023B95">					referrerpolicy</span><span style="color:#0E1116">=</span><span style="color:#032563">"strict-origin"</span></span>
+<span class="line"><span style="color:#023B95">					rel</span><span style="color:#0E1116">=</span><span style="color:#032563">"external noopener"</span></span>
+<span class="line"><span style="color:#0E1116">				&gt;</span></span>
+<span class="line"><span style="color:#0E1116">					&lt;</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;Next Website&lt;/</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">					&lt;</span><span style="color:#024C1A">span</span><span style="color:#023B95"> aria-hidden</span><span style="color:#0E1116">=</span><span style="color:#032563">"true"</span><span style="color:#0E1116">&gt;</span><span style="color:#A0111F">&amp;#x23e9;&amp;#xfe0e;</span><span style="color:#0E1116">&lt;/</span><span style="color:#024C1A">span</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">				&lt;/</span><span style="color:#024C1A">a</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">			&lt;/</span><span style="color:#024C1A">li</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">		&lt;/</span><span style="color:#024C1A">ul</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">	&lt;/</span><span style="color:#024C1A">article</span><span style="color:#0E1116">&gt;</span></span>
+<span class="line"><span style="color:#0E1116">&lt;/</span><span style="color:#024C1A">tojs-webring</span><span style="color:#0E1116">&gt;</span></span></code></pre>
+			<!-- #endregion -->
+
+			<p>It will look like this:</p>
+			<iframe src="/sample-code.html" frameborder="0"></iframe>
+
+			<h3><abbr title="Do It Yourself">DIY</abbr></h3>
+			<p>To add the webring to your webite you need to add a few links:</p>
+			<ul>
+				<li>A link to <a href="/">the webring itself</a>.</li>
+				<li>A link to <a href="/prev">the previous page</a>.</li>
+				<li>A link to <a href="/next">the next page</a>.</li>
+				<li><em>(Optional)</em> A link to <a href="/next">a random page</a>.</li>
+			</ul>
+
+			<p>
+				A suggestion for the structure is to add the link to the webring in one line, and the other links on a second line in the following order: previous, random, next.
+			</p>
+
+			<h2 id="create-pr">Create a PR</h2>
+			<ul>
+				<li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo">Fork the repo</a></li>
+				<li>Edit <code>members.json</code> to <strong>add</strong> your website to the list.</li>
+				<li>
+					<a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request"
+					>Create a Pull Request</a>
+				</li>
+			</ul>
+
+			<h2>Remove my website from the webring</h2>
+			<ul>
+				<li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo">Fork the repo</a></li>
+				<li>Edit <code>members.json</code> to <strong>remove</strong> your website to the list.</li>
+				<li>
+					<a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request"
+					>Create a Pull Request</a>
+				</li>
+			</ul>
+		</main>
 	</body>
 </html>
