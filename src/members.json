@@ -1,6 +1,6 @@
 {
 	"$schema": "./members.schema.json",
 	"members": [
-		{ "url": "https://madcampos.dev/", "title": "Marco Campos" }
+		{ "url": "https://madcampos.dev/", "title": "Marco Campos", "github": "madcampos" }
 	]
 }

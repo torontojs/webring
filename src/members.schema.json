@@ -17,6 +17,7 @@
 				"type": "object",
 				"description": "A member for the webring",
 				"required": ["url", "title"],
+				"additionalProperties": false,
 				"properties": {
 					"url": {
 						"type": "string",
@@ -27,6 +28,11 @@
 						"type": "string",
 						"minLength": 1,
 						"description": "The title that will be displayed for your webiste on the webrign list."
+					},
+					"github": {
+						"type": "string",
+						"minLength": 1,
+						"description": "Your github username. Will be used to contact people in case of major changes to the webring."
 					}
 				}
 			}
