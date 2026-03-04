@@ -12,7 +12,7 @@
 	"preview_urls": false,
 	"dev": {
 		"ip": "localhost",
-		"port": 6666,
+		"port": 3000,
 		"local_protocol": "https",
 		"upstream_protocol": "https"
 	},
@@ -20,9 +20,12 @@
 		"directory": "./public",
 		"binding": "Assets",
 		"run_worker_first": [
-			"/next",
 			"/prev",
-			"/random"
+			"/prev/",
+			"/next",
+			"/next/",
+			"/random",
+			"/random/"
 		],
 		"html_handling": "auto-trailing-slash",
 		"not_found_handling": "404-page"
