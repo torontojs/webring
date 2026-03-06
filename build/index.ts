@@ -6,11 +6,13 @@ const REGION_MARKER = 'member-list';
 
 const fileContents = await readFile(FILE_PATH, { encoding: 'utf-8' });
 const updatedFileContents = fileContents.replace(
-	new RegExp(`<!-- #region ${REGION_MARKER} -->(?:.*?)<-- #endregion ${REGION_MARKER} -->`, 'gium'),
+	new RegExp(`<!-- #region ${REGION_MARKER} -->(?:.*?)<!-- #endregion ${REGION_MARKER} -->`, 'isu'),
 	`
-	<!-- #region ${REGION_MARKER} -->
-	${membersList.members.map(({ url, title }) => `<a href="${url}">${title}</a>`).join('\n')}
-	<!-- #endregion ${REGION_MARKER} -->
+		<!-- #region ${REGION_MARKER} -->
+		<ul>
+		${membersList.members.map(({ url, title }) => `<li><a href="${url}">${title}</a></li>`).join('\n')}
+		</ul>
+		<!-- #endregion ${REGION_MARKER} -->
 `
 );
 
