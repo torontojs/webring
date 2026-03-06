@@ -1,18 +1,6 @@
 import { env } from 'cloudflare:workers';
 import membersList from './members.json' with { type: 'json' };
 
-function getRequestInfo(request: Request) {
-	const originHeader = request.headers.get('Referer') ?? request.headers.get('Origin') ?? undefined;
-	const origin = URL.canParse(originHeader ?? '') ? new URL(originHeader ?? '') : undefined;
-
-	return {
-		requestUrl: new URL(request.url),
-		origin,
-		protocol: origin?.protocol.replace(':', '') ?? 'https',
-		index: origin ? membersList.members.findIndex(({ url: candidateUrl }) => new URL(candidateUrl).origin === origin.origin) : -1
-	};
-}
-
 function filterMemberList(protocol: string, origin?: URL) {
 	return membersList.members.filter(({ url }) => {
 		const candidateUrl = new URL(url);
@@ -21,10 +9,21 @@ function filterMemberList(protocol: string, origin?: URL) {
 	});
 }
 
-function nextPage(request: Request) {
-	const { origin, index, requestUrl, protocol } = getRequestInfo(request);
+function getRequestInfo(request: Request) {
+	const originHeader = request.headers.get('Referer') ?? request.headers.get('Origin') ?? undefined;
+	const origin = URL.canParse(originHeader ?? '') ? new URL(originHeader ?? '') : undefined;
 
-	if (!origin || index === -1) {
+	return {
+		requestUrl: new URL(request.url),
+		origin,
+		protocol: origin?.protocol ?? 'https:'
+	};
+}
+
+function nextPage(request: Request) {
+	const { origin, requestUrl, protocol } = getRequestInfo(request);
+
+	if (!origin) {
 		return new Response(null, {
 			status: 307,
 			headers: new Headers({ Location: requestUrl.origin })
@@ -32,18 +31,27 @@ function nextPage(request: Request) {
 	}
 
 	const filteredList = filterMemberList(protocol);
-	const nextPage = index + 1 === filteredList.length ? 0 : index + 1;
+	const index = filteredList.findIndex(({ url: candidateUrl }) => new URL(candidateUrl).origin === origin.origin);
+
+	if (index === -1) {
+		return new Response(null, {
+			status: 307,
+			headers: new Headers({ Location: requestUrl.origin })
+		});
+	}
+
+	const nextPage = index + 1 >= filteredList.length ? 0 : index + 1;
 
 	return new Response(null, {
 		status: 307,
-		headers: new Headers({ Location: filteredList.at(nextPage)!.url })
+		headers: new Headers({ Location: filteredList.at(nextPage)?.url ?? requestUrl.origin })
 	});
 }
 
 function previousPage(request: Request) {
-	const { origin, index, requestUrl, protocol } = getRequestInfo(request);
+	const { origin, requestUrl, protocol } = getRequestInfo(request);
 
-	if (!origin || index === -1) {
+	if (!origin) {
 		return new Response(null, {
 			status: 307,
 			headers: new Headers({ Location: requestUrl.origin })
@@ -51,10 +59,18 @@ function previousPage(request: Request) {
 	}
 
 	const filteredList = filterMemberList(protocol);
+	const index = filteredList.findIndex(({ url: candidateUrl }) => new URL(candidateUrl).origin === origin.origin);
+
+	if (index === -1) {
+		return new Response(null, {
+			status: 307,
+			headers: new Headers({ Location: requestUrl.origin })
+		});
+	}
 
 	return new Response(null, {
 		status: 307,
-		headers: new Headers({ Location: filteredList.at(index - 1)!.url })
+		headers: new Headers({ Location: filteredList.at(index - 1)?.url ?? requestUrl.origin })
 	});
 }
 
@@ -72,8 +88,6 @@ function randomPage(request: Request) {
 
 async function fetchHandler(request: Request) {
 	const url = new URL(request.url);
-
-	console.log(url);
 
 	let response: Response;
 
