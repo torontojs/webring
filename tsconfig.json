@@ -1,5 +1,5 @@
 {
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "build/**/*"],
 	"exclude": ["node_modules/**/*"],
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
@@ -7,7 +7,6 @@
 		"allowSyntheticDefaultImports": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
-		"baseUrl": ".",
 		"checkJs": true,
 		"composite": true,
 		"erasableSyntaxOnly": true,
@@ -47,6 +46,6 @@
 		"useDefineForClassFields": true,
 		"useUnknownInCatchVariables": false,
 		"verbatimModuleSyntax": true,
-		"types": []
+		"types": ["node"]
 	}
 }
