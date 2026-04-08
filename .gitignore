@@ -30,3 +30,6 @@ certs
 
 # Typescript build info
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify

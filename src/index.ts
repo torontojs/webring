@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers';
 import membersList from './members.json' with { type: 'json' };
 
 function filterMemberList(protocol: string, origin?: URL) {
@@ -86,7 +85,7 @@ function randomPage(request: Request) {
 	});
 }
 
-async function fetchHandler(request: Request) {
+export default function handler(request: Request) {
 	const url = new URL(request.url);
 
 	let response: Response;
@@ -110,17 +109,9 @@ async function fetchHandler(request: Request) {
 				headers: new Headers({ 'Content-Type': 'application/json' })
 			});
 			break;
-		default: {
-			const errorPage = await env.Assets.fetch('https://assets.local/404.html');
-			response = new Response(errorPage.body, { status: 404 });
-		}
+		default:
+			response = new Response('Not Found', { status: 404 });
 	}
 
 	return response;
 }
-
-const handler: ExportedHandler<Env> = {
-	fetch: fetchHandler
-};
-
-export default handler;

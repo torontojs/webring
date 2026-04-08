@@ -5,12 +5,10 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"bootstrap": "pnpm install && pnpm run generate:certs && pnpm run generate:types",
-		"generate:types": "wrangler types ./src/env.d.ts",
-		"generate:certs": "mkdir certs && mkcert -key-file=\"./certs/server.key\" -cert-file=\"./certs/server.crt\" \"localhost\"",
-		"start": "wrangler dev --env=local --https-cert-path certs/server.crt --https-key-path certs/server.key",
-		"deploy": "wrangler deploy --minify --env=\"\"",
-		"format": "dprint fmt --staged",
+		"bootstrap": "pnpm install",
+		"start": "netlify dev",
+		"deploy": "netlify deploy --prod",
+		"format": "dprint fmt",
 		"typecheck": "tsc --noEmit"
 	},
 	"keywords": [
@@ -20,9 +18,10 @@
 	"license": "GPL-3.0-only",
 	"packageManager": "pnpm@10.30.1",
 	"devDependencies": {
+		"@netlify/functions": "^5.1.5",
 		"@types/node": "^25.5.0",
 		"dprint": "^0.53.1",
-		"typescript": "^6.0.2",
-		"wrangler": "^4.79.0"
+		"netlify-cli": "^18.0.0",
+		"typescript": "^6.0.2"
 	}
 }
