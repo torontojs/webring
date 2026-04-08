@@ -14,14 +14,48 @@
 			<p>We are a group of people part of the <a href="https://torontojs.com/">Toronto JS</a> community.</p>
 			<p>To join the webring check our <a href="/how-to">"How to" guide</a>.</p>
 
-			<h2>Webring Member List</h2>
-			
-		<!-- #region member-list -->
-		<ul>
-		<li><a href="https://madcampos.dev/">Marco Campos</a></li>
-		</ul>
-		<!-- #endregion member-list -->
+			<h2>What is a Webring?</h2>
+			<p>
+				A <a href="https://en.wikipedia.org/wiki/Webring">webring</a> is a collection of websites linked together in a circle.<br />
+				So going to the next webtise will never reach an end and will just go around.
+			</p>
+			<p>This webring specifically has a theme that all websites are part of the <a href="https://torontojs.com/">Toronto JS</a> community.</p>
 
+			<h2>Webring Member List</h2>
+
+			<div id="member-list-wrapper">
+				<progress></progress>
+			</div>
 		</main>
+		<script type="module">
+			/**
+			 * @typedef {Object} Member
+			 * @property {string} url
+			 * @property {string} title
+			 * @property {string} github
+			 */
+
+			/**
+			 * @typedef {Object} MemberList
+			 * @prop {string} $schema
+			 * @prop {Member[]} members
+			 */
+
+			const memberListWrapper = document.querySelector('#member-list-wrapper');
+
+			try {
+				const membersResponse = await fetch('./members.json');
+
+				if (membersResponse.ok) {
+					const memberList = /** @type {MemberList} */ (await membersResponse.json());
+
+					memberListWrapper.innerHTML = `<ul>
+						${memberList.members.map(({ url, title }) => `<li><a href="${url}">${title}</a></li>`).join('\n')}
+					</ul>`;
+				}
+			} catch {
+				memberListWrapper.innerHTML = `<p>Member list failed to load</p>`;
+			}
+		</script>
 	</body>
 </html>

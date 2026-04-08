@@ -48,3 +48,9 @@ pre code {
 		}
 	}
 }
+
+progress {
+	margin-inline: auto;
+	inline-size: clamp(5ch, 100%, 30ch);
+	display: block;
+}
