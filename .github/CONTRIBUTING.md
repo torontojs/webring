@@ -13,21 +13,23 @@ But if you need help setting up, please contact one of the contributors so we ca
 ## Prerequisites
 
 - **Required:** [`node.js`](https://nodejs.org/en/download/prebuilt-installer) (Preferably managed by [`mise`](https://mise.jdx.dev/getting-started.html))
-- **Required:** [`mkcert`](https://github.com/FiloSottile/mkcert)
 - **Required:** [`pnpm`](https://pnpm.io/installation)
-- **Required:** [Commit signing configured](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
 - _Recommended:_ [VS Code](https://code.visualstudio.com/Download)
 
 ## Cloning and configuring for local development
 
 1. Clone the repository
-2. Run `pnpm run bootstrap`
+2. Run `pnpm install`
 
 ## Running the local server
 
-Run `pnpm start` to start the local server
+Run `pnpm start` to start the local server. This uses Netlify Dev to emulate the production environment.
+
+## Deploying
+
+Push to `main` to deploy to Netlify. The site is deployed at https://webring.torontojs.com
 
 ## Notes on the codebase
 
-- The code uses [Typescript](https://www.typescriptlang.org/)
-- The project runs on [Cloudflare Workers](https://developers.cloudflare.com/workers/)
+- The code uses [TypeScript](https://www.typescriptlang.org/)
+- The project runs on [Netlify Functions](https://docs.netlify.com/functions/overview/)
