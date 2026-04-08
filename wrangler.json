@@ -8,11 +8,11 @@
 	"send_metrics": false,
 	"preserve_file_names": true,
 	"minify": true,
-	"workers_dev": false,
+	"workers_dev": true,
 	"preview_urls": false,
 	"dev": {
 		"ip": "localhost",
-		"port": 3000,
+		"port": 2048,
 		"local_protocol": "https",
 		"upstream_protocol": "https"
 	},
@@ -25,7 +25,8 @@
 			"/next",
 			"/next/",
 			"/random",
-			"/random/"
+			"/random/",
+			"/members.json"
 		],
 		"html_handling": "auto-trailing-slash",
 		"not_found_handling": "404-page"
@@ -33,17 +34,6 @@
 	"vars": { "NODE_ENV": "production" },
 	"env": {
 		"local": {
-			"assets": {
-				"directory": "./public",
-				"binding": "Assets",
-				"run_worker_first": [
-					"/next",
-					"/prev",
-					"/random"
-				],
-				"html_handling": "auto-trailing-slash",
-				"not_found_handling": "404-page"
-			},
 			"vars": { "NODE_ENV": "local" }
 		}
 	}

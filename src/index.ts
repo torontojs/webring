@@ -104,6 +104,12 @@ async function fetchHandler(request: Request) {
 		case '/random/':
 			response = randomPage(request);
 			break;
+		case '/members.json':
+			response = new Response(JSON.stringify(membersList), {
+				status: 200,
+				headers: new Headers({ 'Content-Type': 'application/json' })
+			});
+			break;
 		default: {
 			const errorPage = await env.Assets.fetch('https://assets.local/404.html');
 			response = new Response(errorPage.body, { status: 404 });
