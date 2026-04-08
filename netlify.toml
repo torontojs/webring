@@ -1,14 +1,13 @@
 [build]
-command = "echo 'No build step needed'"
-publish = "public"
-functions = "src"
+  publish = "public"
+  functions = "src"
 
 [dev]
-command = "netlify dev"
-port = 8888
-publish = "public"
+  port = 8888
+  publish = "public"
+  autoLaunch = false
 
 [[redirects]]
-from = "/*"
-to = "/.netlify/functions/index"
-status = 200
+  from = "/*"
+  to = "/.netlify/functions/index"
+  status = 200

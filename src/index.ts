@@ -1,3 +1,4 @@
+import type { Handler, HandlerEvent } from '@netlify/functions';
 import membersList from './members.json' with { type: 'json' };
 
 function filterMemberList(protocol: string, origin?: URL) {
@@ -8,110 +9,117 @@ function filterMemberList(protocol: string, origin?: URL) {
 	});
 }
 
-function getRequestInfo(request: Request) {
-	const originHeader = request.headers.get('Referer') ?? request.headers.get('Origin') ?? undefined;
-	const origin = URL.canParse(originHeader ?? '') ? new URL(originHeader ?? '') : undefined;
+function getRequestInfo(event: HandlerEvent) {
+	const referer = event.headers['referer'] ?? event.headers['referrer'];
+	const originHeader = referer ?? event.headers['origin'];
+	const origin = originHeader && URL.canParse(originHeader) ? new URL(originHeader) : undefined;
+
+	const url = new URL(event.path, `https://${event.headers['host'] ?? 'localhost'}`);
 
 	return {
-		requestUrl: new URL(request.url),
+		requestUrl: url,
 		origin,
 		protocol: origin?.protocol ?? 'https:'
 	};
 }
 
-function nextPage(request: Request) {
-	const { origin, requestUrl, protocol } = getRequestInfo(request);
+function nextPage(event: HandlerEvent) {
+	const { origin, requestUrl, protocol } = getRequestInfo(event);
 
 	if (!origin) {
-		return new Response(null, {
-			status: 307,
-			headers: new Headers({ Location: requestUrl.origin })
-		});
+		return {
+			statusCode: 307,
+			headers: { Location: requestUrl.origin }
+		};
 	}
 
 	const filteredList = filterMemberList(protocol);
 	const index = filteredList.findIndex(({ url: candidateUrl }) => new URL(candidateUrl).origin === origin.origin);
 
 	if (index === -1) {
-		return new Response(null, {
-			status: 307,
-			headers: new Headers({ Location: requestUrl.origin })
-		});
+		return {
+			statusCode: 307,
+			headers: { Location: requestUrl.origin }
+		};
 	}
 
 	const nextPage = index + 1 >= filteredList.length ? 0 : index + 1;
 
-	return new Response(null, {
-		status: 307,
-		headers: new Headers({ Location: filteredList.at(nextPage)?.url ?? requestUrl.origin })
-	});
+	return {
+		statusCode: 307,
+		headers: { Location: filteredList.at(nextPage)?.url ?? requestUrl.origin }
+	};
 }
 
-function previousPage(request: Request) {
-	const { origin, requestUrl, protocol } = getRequestInfo(request);
+function previousPage(event: HandlerEvent) {
+	const { origin, requestUrl, protocol } = getRequestInfo(event);
 
 	if (!origin) {
-		return new Response(null, {
-			status: 307,
-			headers: new Headers({ Location: requestUrl.origin })
-		});
+		return {
+			statusCode: 307,
+			headers: { Location: requestUrl.origin }
+		};
 	}
 
 	const filteredList = filterMemberList(protocol);
 	const index = filteredList.findIndex(({ url: candidateUrl }) => new URL(candidateUrl).origin === origin.origin);
 
 	if (index === -1) {
-		return new Response(null, {
-			status: 307,
-			headers: new Headers({ Location: requestUrl.origin })
-		});
+		return {
+			statusCode: 307,
+			headers: { Location: requestUrl.origin }
+		};
 	}
 
-	return new Response(null, {
-		status: 307,
-		headers: new Headers({ Location: filteredList.at(index - 1)?.url ?? requestUrl.origin })
-	});
+	return {
+		statusCode: 307,
+		headers: { Location: filteredList.at(index - 1)?.url ?? requestUrl.origin }
+	};
 }
 
-function randomPage(request: Request) {
-	const { protocol, origin, requestUrl } = getRequestInfo(request);
+function randomPage(event: HandlerEvent) {
+	const { protocol, origin, requestUrl } = getRequestInfo(event);
 	const filteredList = filterMemberList(protocol, origin);
 
 	const randomIndex = Math.floor(Math.random() * filteredList.length);
 
-	return new Response(null, {
-		status: 307,
-		headers: new Headers({ Location: filteredList.at(randomIndex)?.url ?? requestUrl.origin })
-	});
+	return {
+		statusCode: 307,
+		headers: { Location: filteredList.at(randomIndex)?.url ?? requestUrl.origin }
+	};
 }
 
-export default function handler(request: Request) {
-	const url = new URL(request.url);
+const handler: Handler = async (event: HandlerEvent) => {
+	let response;
 
-	let response: Response;
-
-	switch (url.pathname) {
+	switch (event.path) {
 		case '/prev':
 		case '/prev/':
-			response = previousPage(request);
+			response = previousPage(event);
 			break;
 		case '/next':
 		case '/next/':
-			response = nextPage(request);
+			response = nextPage(event);
 			break;
 		case '/random':
 		case '/random/':
-			response = randomPage(request);
+			response = randomPage(event);
 			break;
 		case '/members.json':
-			response = new Response(JSON.stringify(membersList), {
-				status: 200,
-				headers: new Headers({ 'Content-Type': 'application/json' })
-			});
+			response = {
+				statusCode: 200,
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(membersList)
+			};
 			break;
 		default:
-			response = new Response('Not Found', { status: 404 });
+			response = {
+				statusCode: 404,
+				body: 'Not Found'
+			};
 	}
 
 	return response;
-}
+};
+
+export { handler };
