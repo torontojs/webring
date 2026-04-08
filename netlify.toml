@@ -9,25 +9,6 @@ port = 8888
 publish = "public"
 
 [[redirects]]
-from = "/prev"
+from = "/*"
 to = "/.netlify/functions/index"
 status = 200
-conditions = { Role = [] }
-
-[[redirects]]
-from = "/next"
-to = "/.netlify/functions/index"
-status = 200
-conditions = { Role = [] }
-
-[[redirects]]
-from = "/random"
-to = "/.netlify/functions/index"
-status = 200
-conditions = { Role = [] }
-
-[[redirects]]
-from = "/members.json"
-to = "/.netlify/functions/index"
-status = 200
-conditions = { Role = [] }
