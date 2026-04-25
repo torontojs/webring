@@ -36,6 +36,7 @@ pre code {
 		padding-inline-start: calc(var(--line-counter-width) + var(--line-counter-margin-right));
 		inline-size: 100%;
 		counter-increment: step;
+		tab-size: 4;
 
 		&::before {
 			display: inline-block;
